@@ -55,6 +55,8 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView sportText;
 
+    private TextView xianshengText;
+
     private ImageView bingPicImg;
 
     public SwipeRefreshLayout swipeRefresh;
@@ -62,6 +64,8 @@ public class WeatherActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
 
     private Button navButton;
+
+    private ImageView funnyPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +89,13 @@ public class WeatherActivity extends AppCompatActivity {
         comfortText= (TextView) findViewById(R.id.comfort_text);
         carWashText= (TextView) findViewById(R.id.car_wash_text);
         sportText= (TextView) findViewById(R.id.sport_text);
+        xianshengText= (TextView) findViewById(R.id.xiansheng_text);
         bingPicImg= (ImageView) findViewById(R.id.bing_pic_img);
         swipeRefresh= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
         navButton= (Button) findViewById(R.id.nav_button);
+        funnyPic= (ImageView) findViewById(R.id.funny_pic);
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,12 +120,13 @@ public class WeatherActivity extends AppCompatActivity {
                 requestWeather(weatherId);
             }
         });
-        String bingPic=prefs.getString("bing_pic",null);
-        if(bingPic!=null){
-            Glide.with(this).load(bingPic).into(bingPicImg);
-        }else {
-            loadBingPic();
-        }
+//        String bingPic=prefs.getString("bing_pic",null);
+//        if(bingPic!=null){
+//            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
+//        }else {
+//            loadBingPic();
+//        }
+
     }
 
     public void requestWeather(final String weatherId){
@@ -168,43 +175,45 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
 
-        loadBingPic();
+//        loadBingPic();
     }
 
-    private void loadBingPic(){
-        String requestBingPic="http://guolin.tech/api/bing_pic";
-        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
+//    private void loadBingPic(){
+//        String requestBingPic="http://guolin.tech/api/bing_pic";
+//        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                final String bingPic=response.body().string();
+//                SharedPreferences.Editor editor=PreferenceManager.
+//                        getDefaultSharedPreferences(WeatherActivity.this).edit();
+//                editor.putString("bing_pic",bingPic);
+//                editor.apply();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Glide.with(WeatherActivity.this).load(R.drawable.rain).into(bingPicImg);
+//                    }
+//                });
+//
+//            }
+//        });
+//    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final String bingPic=response.body().string();
-                SharedPreferences.Editor editor=PreferenceManager.
-                        getDefaultSharedPreferences(WeatherActivity.this).edit();
-                editor.putString("bing_pic",bingPic);
-                editor.apply();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
-                    }
-                });
 
-            }
-        });
-    }
 
     private void showWeatherInfo(Weather weather){
         String cityName=weather.basic.cityName;
         String updateTime=weather.basic.update.updatetime.split(" ")[1];
-        String degree=weather.now.temperature+"℃";
+        String degree=weather.now.temperature;
         String weatherInfo=weather.now.more.info;
         titleCity.setText(cityName);
         titleUpdateTime.setText(updateTime);
-        degreeText.setText(degree);
+        degreeText.setText(degree+"℃");
         weatherInfoText.setText(weatherInfo);
         forecastLayout.removeAllViews();
         for(Forecast forecast:weather.forecastList){
@@ -221,8 +230,34 @@ public class WeatherActivity extends AppCompatActivity {
             forecastLayout.addView(view);
         }
         if(weather.aqi!=null){
-            aqiText.setText(weather.aqi.city.aqi);
-            pm25Text.setText(weather.aqi.city.pm25);
+            //aqiText.setText(weather.aqi.city.aqi);
+            if(Double.valueOf(weather.aqi.city.aqi)>0&&Double.valueOf(weather.aqi.city.aqi)<=50){
+                aqiText.setText("优");
+            }else if(Double.valueOf(weather.aqi.city.aqi)>50&&Double.valueOf(weather.aqi.city.aqi)<=100){
+                aqiText.setText("良");
+            }else if(Double.valueOf(weather.aqi.city.aqi)>100&&Double.valueOf(weather.aqi.city.aqi)<=150){
+                aqiText.setText("轻度污染");
+            }else if(Double.valueOf(weather.aqi.city.aqi)>150&&Double.valueOf(weather.aqi.city.aqi)<=200) {
+                aqiText.setText("中度污染");
+            }else if(Double.valueOf(weather.aqi.city.aqi)>200&&Double.valueOf(weather.aqi.city.aqi)<=300) {
+                aqiText.setText("重度污染");
+            }else if(Double.valueOf(weather.aqi.city.aqi)>300) {
+                aqiText.setText("严重污染");
+            }
+            //pm25Text.setText(weather.aqi.city.pm25);
+            if(Double.valueOf(weather.aqi.city.pm25)>0&&Double.valueOf(weather.aqi.city.pm25)<=35){
+                pm25Text.setText("优");
+            }else if(Double.valueOf(weather.aqi.city.pm25)>35&&Double.valueOf(weather.aqi.city.pm25)<=75){
+                pm25Text.setText("良");
+            }else if(Double.valueOf(weather.aqi.city.pm25)>75&&Double.valueOf(weather.aqi.city.pm25)<=115){
+                pm25Text.setText("轻度污染");
+            }else if(Double.valueOf(weather.aqi.city.pm25)>115&&Double.valueOf(weather.aqi.city.pm25)<=150) {
+                pm25Text.setText("中度污染");
+            }else if(Double.valueOf(weather.aqi.city.pm25)>150&&Double.valueOf(weather.aqi.city.pm25)<=250) {
+                pm25Text.setText("重度污染");
+            }else if(Double.valueOf(weather.aqi.city.pm25)>250) {
+                pm25Text.setText("严重污染");
+            }
         }
         String comfort="舒适度："+weather.suggestion.comfort.info;
         String carWash="洗车指数："+weather.suggestion.carWash.info;
@@ -230,9 +265,22 @@ public class WeatherActivity extends AppCompatActivity {
         comfortText.setText(comfort);
         carWashText.setText(carWash);
         sportText.setText(sport);
+        if(Double.valueOf(degree)>0&&Double.valueOf(degree)<=20){
+            xianshengText.setText("先生的建议：天气好冷啊，赶紧躲被窝吧，出门记得穿多点衣服");
+        }else if(Double.valueOf(degree)>20&&Double.valueOf(degree)<=30){
+            xianshengText.setText("先生的建议：天气比较暖和，是约先生出去游玩的最佳时机，早晚记得多穿衣服哦");
+        }else if(Double.valueOf(degree)>30){
+            xianshengText.setText("先生的建议：天气好热啊，赶紧打电话约你的先生去吃冰吧");
+        }
         weatherLayout.setVisibility(View.VISIBLE);
         Intent intent=new Intent(this,AutoUpdateService.class);
         startService(intent);
+        if(weatherInfo.equals("阴")){
+            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
+        }else if(weatherInfo.equals("多云")){
+            Glide.with(this).load(R.drawable.cloud).into(bingPicImg);
+        }
+        Glide.with(this).load(R.drawable.logo2).into(funnyPic);
 
 
     }
