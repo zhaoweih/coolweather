@@ -1,16 +1,23 @@
 package com.coolweather.android;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,12 +33,14 @@ import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
+
 
     private ScrollView weatherLayout;
 
@@ -42,6 +51,8 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView degreeText;
 
     private TextView weatherInfoText;
+
+    private TextView countDownDayText;
 
     private LinearLayout forecastLayout;
 
@@ -67,6 +78,12 @@ public class WeatherActivity extends AppCompatActivity {
 
     private ImageView funnyPic;
 
+    private FloatingActionButton floatingButton;
+
+    public LinearLayout countdowndaylayout;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +100,7 @@ public class WeatherActivity extends AppCompatActivity {
         titleUpdateTime= (TextView) findViewById(R.id.title_update_time);
         degreeText= (TextView) findViewById(R.id.degree_text);
         weatherInfoText= (TextView) findViewById(R.id.weather_info_text);
+        countDownDayText= (TextView) findViewById(R.id.countdownday_text);
         forecastLayout= (LinearLayout) findViewById(R.id.forecast_layout);
         aqiText= (TextView) findViewById(R.id.aqi_text);
         pm25Text= (TextView) findViewById(R.id.pm25_text);
@@ -96,6 +114,15 @@ public class WeatherActivity extends AppCompatActivity {
         drawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
         navButton= (Button) findViewById(R.id.nav_button);
         funnyPic= (ImageView) findViewById(R.id.funny_pic);
+        countdowndaylayout= (LinearLayout) findViewById(R.id.countdownday_layout);
+        floatingButton= (FloatingActionButton) findViewById(R.id.floatingAB);
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent=new Intent(WeatherActivity.this,one.class);
+                startActivity(intent);
+            }
+        });
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +147,10 @@ public class WeatherActivity extends AppCompatActivity {
                 requestWeather(weatherId);
             }
         });
+        floatingButton.setVisibility(View.INVISIBLE);
+
+
+
 //        String bingPic=prefs.getString("bing_pic",null);
 //        if(bingPic!=null){
 //            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
@@ -128,6 +159,9 @@ public class WeatherActivity extends AppCompatActivity {
 //        }
 
     }
+
+
+
 
     public void requestWeather(final String weatherId){
 
@@ -275,13 +309,27 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
         Intent intent=new Intent(this,AutoUpdateService.class);
         startService(intent);
-        if(weatherInfo.equals("阴")){
+        if(weatherInfo.equals("晴")){
             Glide.with(this).load(R.drawable.rain).into(bingPicImg);
         }else if(weatherInfo.equals("多云")){
             Glide.with(this).load(R.drawable.cloud).into(bingPicImg);
         }
         Glide.with(this).load(R.drawable.logo2).into(funnyPic);
+        Calendar c=Calendar.getInstance();
+        int month=c.get(Calendar.MONTH);
+        int day=c.get(Calendar.DATE);
+        if((month+1)==2&&day==14){
+            floatingButton.setVisibility(View.VISIBLE);
+            Glide.with(this).load(R.drawable.rose).into(bingPicImg);
+        }
+        int countdownday=20-((month+1)+day);
+        if((month+1)==2&&countdownday>0){
+            countDownDayText.setText(String.valueOf(countdownday));
+        }else{
+            countdowndaylayout.setVisibility(View.GONE);
+        }
 
 
     }
+
 }

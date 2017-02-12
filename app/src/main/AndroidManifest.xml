@@ -23,7 +23,15 @@
         <service
             android:name=".AutoUpdateService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".one" />
+        <activity android:name=".two" />
+        <activity android:name=".three" />
+        <activity android:name=".four" />
+        <activity android:name=".five" />
+        <activity android:name=".wrong" />
+        <activity android:name=".music"></activity>
     </application>
 
 </manifest>
