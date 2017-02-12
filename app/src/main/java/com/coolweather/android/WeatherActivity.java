@@ -84,6 +84,8 @@ public class WeatherActivity extends AppCompatActivity {
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,7 @@ public class WeatherActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_weather);
+
         weatherLayout= (ScrollView) findViewById(R.id.weather_layout);
         titleCity= (TextView) findViewById(R.id.title_city);
         titleUpdateTime= (TextView) findViewById(R.id.title_update_time);
@@ -151,12 +154,13 @@ public class WeatherActivity extends AppCompatActivity {
 
 
 
-//        String bingPic=prefs.getString("bing_pic",null);
-//        if(bingPic!=null){
-//            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
-//        }else {
-//            loadBingPic();
-//        }
+
+        String bingPic=prefs.getString("bing_pic",null);
+        if(bingPic!=null){
+            Glide.with(this).load(bingPic).into(bingPicImg);
+        }else {
+            loadBingPic();
+        }
 
     }
 
@@ -208,35 +212,44 @@ public class WeatherActivity extends AppCompatActivity {
 
             }
         });
+        Calendar c=Calendar.getInstance();
+        int month=c.get(Calendar.MONTH);
+        int day=c.get(Calendar.DATE);
+        if((month+1)==2&&day==14){
+            Glide.with(this).load(R.drawable.rose).into(bingPicImg);
+        }else{
+            loadBingPic();
+        }
 
-//        loadBingPic();
+
+
     }
 
-//    private void loadBingPic(){
-//        String requestBingPic="http://guolin.tech/api/bing_pic";
-//        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                final String bingPic=response.body().string();
-//                SharedPreferences.Editor editor=PreferenceManager.
-//                        getDefaultSharedPreferences(WeatherActivity.this).edit();
-//                editor.putString("bing_pic",bingPic);
-//                editor.apply();
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Glide.with(WeatherActivity.this).load(R.drawable.rain).into(bingPicImg);
-//                    }
-//                });
-//
-//            }
-//        });
-//    }
+    private void loadBingPic(){
+        String requestBingPic="http://guolin.tech/api/bing_pic";
+        HttpUtil.sendOkHttpRequest(requestBingPic, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String bingPic=response.body().string();
+                SharedPreferences.Editor editor=PreferenceManager.
+                        getDefaultSharedPreferences(WeatherActivity.this).edit();
+                editor.putString("bing_pic",bingPic);
+                editor.apply();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(WeatherActivity.this).load(bingPic).into(bingPicImg);
+                    }
+                });
+
+            }
+        });
+    }
 
 
 
@@ -309,18 +322,25 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
         Intent intent=new Intent(this,AutoUpdateService.class);
         startService(intent);
-        if(weatherInfo.equals("晴")){
-            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
-        }else if(weatherInfo.equals("多云")){
-            Glide.with(this).load(R.drawable.cloud).into(bingPicImg);
+//        if(weatherInfo.equals("晴")){
+//            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
+//        }else if(weatherInfo.equals("多云")){
+//            Glide.with(this).load(R.drawable.cloud).into(bingPicImg);
+//        }
+
+        if(weatherInfo.equals("晴")||weatherInfo.equals("多云")){
+            Glide.with(this).load(R.drawable.rain).into(funnyPic);
+        }else if(weatherInfo.equals("阵雨")||weatherInfo.equals("小雨")||weatherInfo.equals("阴")){
+            Glide.with(this).load(R.drawable.rain).into(funnyPic);
         }
-        Glide.with(this).load(R.drawable.logo2).into(funnyPic);
         Calendar c=Calendar.getInstance();
         int month=c.get(Calendar.MONTH);
         int day=c.get(Calendar.DATE);
+
         if((month+1)==2&&day==14){
             floatingButton.setVisibility(View.VISIBLE);
             Glide.with(this).load(R.drawable.rose).into(bingPicImg);
+            Glide.with(this).load(R.drawable.logo2).into(funnyPic);
         }
         int countdownday=20-((month+1)+day);
         if((month+1)==2&&countdownday>0){
@@ -328,6 +348,8 @@ public class WeatherActivity extends AppCompatActivity {
         }else{
             countdowndaylayout.setVisibility(View.GONE);
         }
+
+
 
 
     }
