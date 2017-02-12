@@ -58,7 +58,11 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView aqiText;
 
+    private TextView aqinumText;
+
     private TextView pm25Text;
+
+    private TextView pm25numText;
 
     private TextView comfortText;
 
@@ -106,7 +110,9 @@ public class WeatherActivity extends AppCompatActivity {
         countDownDayText= (TextView) findViewById(R.id.countdownday_text);
         forecastLayout= (LinearLayout) findViewById(R.id.forecast_layout);
         aqiText= (TextView) findViewById(R.id.aqi_text);
+        aqinumText= (TextView) findViewById(R.id.aqinum_text);
         pm25Text= (TextView) findViewById(R.id.pm25_text);
+        pm25numText= (TextView) findViewById(R.id.pm25num_text);
         comfortText= (TextView) findViewById(R.id.comfort_text);
         carWashText= (TextView) findViewById(R.id.car_wash_text);
         sportText= (TextView) findViewById(R.id.sport_text);
@@ -151,6 +157,8 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
         floatingButton.setVisibility(View.INVISIBLE);
+
+
 
 
 
@@ -262,6 +270,8 @@ public class WeatherActivity extends AppCompatActivity {
         titleUpdateTime.setText(updateTime);
         degreeText.setText(degree+"℃");
         weatherInfoText.setText(weatherInfo);
+        aqinumText.setText("("+weather.aqi.city.aqi+")");
+        pm25numText.setText("("+weather.aqi.city.pm25+")");
         forecastLayout.removeAllViews();
         for(Forecast forecast:weather.forecastList){
             View view= LayoutInflater.from(this).inflate(R.layout.forecast_item,
@@ -280,30 +290,42 @@ public class WeatherActivity extends AppCompatActivity {
             //aqiText.setText(weather.aqi.city.aqi);
             if(Double.valueOf(weather.aqi.city.aqi)>0&&Double.valueOf(weather.aqi.city.aqi)<=50){
                 aqiText.setText("优");
+                aqinumText.setTextColor(Color.rgb(67,205,128));
             }else if(Double.valueOf(weather.aqi.city.aqi)>50&&Double.valueOf(weather.aqi.city.aqi)<=100){
                 aqiText.setText("良");
+                aqinumText.setTextColor(Color.rgb(67,205,128));
             }else if(Double.valueOf(weather.aqi.city.aqi)>100&&Double.valueOf(weather.aqi.city.aqi)<=150){
                 aqiText.setText("轻度污染");
+                aqinumText.setTextColor(Color.rgb(205,85,85));
             }else if(Double.valueOf(weather.aqi.city.aqi)>150&&Double.valueOf(weather.aqi.city.aqi)<=200) {
                 aqiText.setText("中度污染");
+                aqinumText.setTextColor(Color.rgb(205,85,85));
             }else if(Double.valueOf(weather.aqi.city.aqi)>200&&Double.valueOf(weather.aqi.city.aqi)<=300) {
                 aqiText.setText("重度污染");
+                aqinumText.setTextColor(Color.rgb(205,85,85));
             }else if(Double.valueOf(weather.aqi.city.aqi)>300) {
                 aqiText.setText("严重污染");
+                aqinumText.setTextColor(Color.rgb(205,85,85));
             }
             //pm25Text.setText(weather.aqi.city.pm25);
             if(Double.valueOf(weather.aqi.city.pm25)>0&&Double.valueOf(weather.aqi.city.pm25)<=35){
                 pm25Text.setText("优");
+               pm25numText.setTextColor(Color.rgb(67,205,128));
             }else if(Double.valueOf(weather.aqi.city.pm25)>35&&Double.valueOf(weather.aqi.city.pm25)<=75){
                 pm25Text.setText("良");
+                pm25numText.setTextColor(Color.rgb(67,205,128));
             }else if(Double.valueOf(weather.aqi.city.pm25)>75&&Double.valueOf(weather.aqi.city.pm25)<=115){
                 pm25Text.setText("轻度污染");
+                pm25numText.setTextColor(Color.rgb(205,85,85));
             }else if(Double.valueOf(weather.aqi.city.pm25)>115&&Double.valueOf(weather.aqi.city.pm25)<=150) {
                 pm25Text.setText("中度污染");
+                pm25numText.setTextColor(Color.rgb(205,85,85));
             }else if(Double.valueOf(weather.aqi.city.pm25)>150&&Double.valueOf(weather.aqi.city.pm25)<=250) {
                 pm25Text.setText("重度污染");
+                pm25numText.setTextColor(Color.rgb(205,85,85));
             }else if(Double.valueOf(weather.aqi.city.pm25)>250) {
                 pm25Text.setText("严重污染");
+                pm25numText.setTextColor(Color.rgb(205,85,85));
             }
         }
         String comfort="舒适度："+weather.suggestion.comfort.info;
@@ -329,9 +351,29 @@ public class WeatherActivity extends AppCompatActivity {
 //        }
 
         if(weatherInfo.equals("晴")||weatherInfo.equals("多云")){
-            Glide.with(this).load(R.drawable.rain).into(funnyPic);
+            Glide.with(this).load(R.drawable.sun).into(funnyPic);
+            funnyPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(WeatherActivity.this, "今天天气适合戴墨镜", Toast.LENGTH_SHORT).show();
+                }
+            });
         }else if(weatherInfo.equals("阵雨")||weatherInfo.equals("小雨")||weatherInfo.equals("阴")){
             Glide.with(this).load(R.drawable.rain).into(funnyPic);
+            funnyPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(WeatherActivity.this, "今天天气适合游泳", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else {
+            Glide.with(this).load(R.drawable.sleep).into(funnyPic);
+            funnyPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(WeatherActivity.this, "别戳我，人家睡大觉呢", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         Calendar c=Calendar.getInstance();
         int month=c.get(Calendar.MONTH);
@@ -341,6 +383,20 @@ public class WeatherActivity extends AppCompatActivity {
             floatingButton.setVisibility(View.VISIBLE);
             Glide.with(this).load(R.drawable.rose).into(bingPicImg);
             Glide.with(this).load(R.drawable.logo2).into(funnyPic);
+            titleUpdateTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(WeatherActivity.this, "密令：MEANDYOU", Toast.LENGTH_SHORT).show();
+                }
+            });
+            funnyPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(WeatherActivity.this,password.class);
+                    startActivity(intent);
+
+                }
+            });
         }
         int countdownday=20-((month+1)+day);
         if((month+1)==2&&countdownday>0){
@@ -348,6 +404,10 @@ public class WeatherActivity extends AppCompatActivity {
         }else{
             countdowndaylayout.setVisibility(View.GONE);
         }
+
+
+
+
 
 
 

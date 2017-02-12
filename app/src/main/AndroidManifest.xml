@@ -31,7 +31,8 @@
         <activity android:name=".four" />
         <activity android:name=".five" />
         <activity android:name=".wrong" />
-        <activity android:name=".music"></activity>
+        <activity android:name=".music" />
+        <activity android:name=".password"></activity>
     </application>
 
 </manifest>

@@ -42,6 +42,15 @@
                     android:textColor="#fff"
                     android:textSize="35sp"
                     />
+
+                <TextView
+                    android:id="@+id/aqinum_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="10sp"
+                    />
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,6 +82,15 @@
                     android:layout_gravity="center"
                     android:textColor="#fff"
                     android:textSize="35sp"
+                    />
+
+                <TextView
+                    android:id="@+id/pm25num_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="10sp"
                     />
 
                 <TextView

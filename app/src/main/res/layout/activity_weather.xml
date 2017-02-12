@@ -51,10 +51,10 @@
             <include layout="@layout/now"/>
 
             <include layout="@layout/countdownday"/>
+            <include layout="@layout/aqi"/>
 
             <include layout="@layout/forecast"/>
 
-            <include layout="@layout/aqi"/>
 
             <include layout="@layout/suggestion"/>
 
