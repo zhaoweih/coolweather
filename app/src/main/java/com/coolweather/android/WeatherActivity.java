@@ -7,15 +7,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -122,22 +119,6 @@ public class WeatherActivity extends AppCompatActivity {
         navButton= (Button) findViewById(R.id.nav_button);
         funnyPic= (ImageView) findViewById(R.id.funny_pic);
         countdowndaylayout= (LinearLayout) findViewById(R.id.countdownday_layout);
-        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.nav_call:
-                        Intent intent=new Intent(WeatherActivity.this,ChooseAreaActivity.class);
-                        startActivity(intent);
-                        break;
-                    default:
-
-
-                }
-                return true;
-            }
-        });
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,7 +270,6 @@ public class WeatherActivity extends AppCompatActivity {
             forecastLayout.addView(view);
         }
         if(weather.aqi!=null){
-            //aqiText.setText(weather.aqi.city.aqi);
             if(Double.valueOf(weather.aqi.city.aqi)>0&&Double.valueOf(weather.aqi.city.aqi)<=50){
                 aqiText.setText("优");
                 aqinumText.setTextColor(Color.rgb(67,205,128));
@@ -309,7 +289,6 @@ public class WeatherActivity extends AppCompatActivity {
                 aqiText.setText("严重污染");
                 aqinumText.setTextColor(Color.rgb(205,85,85));
             }
-            //pm25Text.setText(weather.aqi.city.pm25);
             if(Double.valueOf(weather.aqi.city.pm25)>0&&Double.valueOf(weather.aqi.city.pm25)<=35){
                 pm25Text.setText("优");
                pm25numText.setTextColor(Color.rgb(67,205,128));
@@ -346,11 +325,6 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
         Intent intent=new Intent(this,AutoUpdateService.class);
         startService(intent);
-//        if(weatherInfo.equals("晴")){
-//            Glide.with(this).load(R.drawable.rain).into(bingPicImg);
-//        }else if(weatherInfo.equals("多云")){
-//            Glide.with(this).load(R.drawable.cloud).into(bingPicImg);
-//        }
 
         if(weatherInfo.equals("晴")||weatherInfo.equals("多云")){
             Glide.with(this).load(R.drawable.sun).into(funnyPic);
