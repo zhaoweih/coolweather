@@ -8,9 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -82,9 +80,9 @@ public class WeatherActivity extends AppCompatActivity {
 
     private ImageView funnyPic;
 
-    private FloatingActionButton floatingButton;
 
     public LinearLayout countdowndaylayout;
+
 
 
 
@@ -124,12 +122,20 @@ public class WeatherActivity extends AppCompatActivity {
         navButton= (Button) findViewById(R.id.nav_button);
         funnyPic= (ImageView) findViewById(R.id.funny_pic);
         countdowndaylayout= (LinearLayout) findViewById(R.id.countdownday_layout);
-        floatingButton= (FloatingActionButton) findViewById(R.id.floatingAB);
-        floatingButton.setOnClickListener(new View.OnClickListener() {
+        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-               Intent intent=new Intent(WeatherActivity.this,one.class);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_call:
+                        Intent intent=new Intent(WeatherActivity.this,ChooseAreaActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+
+
+                }
+                return true;
             }
         });
         navButton.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +162,7 @@ public class WeatherActivity extends AppCompatActivity {
                 requestWeather(weatherId);
             }
         });
-        floatingButton.setVisibility(View.INVISIBLE);
+
 
 
 
@@ -220,14 +226,10 @@ public class WeatherActivity extends AppCompatActivity {
 
             }
         });
-        Calendar c=Calendar.getInstance();
-        int month=c.get(Calendar.MONTH);
-        int day=c.get(Calendar.DATE);
-        if((month+1)==2&&day==14){
-            Glide.with(this).load(R.drawable.rose).into(bingPicImg);
-        }else{
+
+
             loadBingPic();
-        }
+
 
 
 
@@ -379,25 +381,7 @@ public class WeatherActivity extends AppCompatActivity {
         int month=c.get(Calendar.MONTH);
         int day=c.get(Calendar.DATE);
 
-        if((month+1)==2&&day==14){
-            floatingButton.setVisibility(View.VISIBLE);
-            Glide.with(this).load(R.drawable.rose).into(bingPicImg);
-            Glide.with(this).load(R.drawable.logo2).into(funnyPic);
-            titleUpdateTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(WeatherActivity.this, "密令：MEANDYOU", Toast.LENGTH_SHORT).show();
-                }
-            });
-            funnyPic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(WeatherActivity.this,password.class);
-                    startActivity(intent);
 
-                }
-            });
-        }
         int countdownday=20-((month+1)+day);
         if((month+1)==2&&countdownday>0){
             countDownDayText.setText(String.valueOf(countdownday));
